@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>Helpy Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f2ec; --surface:#ffffff; --surface2:#eceae2; --ink:#17201d; --muted:#5b6660;
+  --line:#ddd9cc; --brand:#0f766e; --brand-ink:#ffffff; --accent:#d97706; --accent-soft:#fef3c7;
+  --ok:#15803d; --radius:14px; --shadow:0 10px 30px rgba(23,32,29,.08);
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#121614; --surface:#1c2220; --surface2:#252c29; --ink:#eef2ef; --muted:#a7b3ac;
+  --line:#333d38; --brand:#2dd4bf; --brand-ink:#0b1512; --accent:#fbbf24; --accent-soft:#3a2f10;
+  --shadow:0 10px 30px rgba(0,0,0,.35); }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;line-height:1.5}
+h1,h2,h3{font-family:"Sora",system-ui,sans-serif;line-height:1.15;margin:0}
+button,[role="button"],select,input,textarea{font:inherit}
+button,select,input:not([type="checkbox"]){min-height:44px}
+a{color:var(--brand)}
+.wrap{max-width:1240px;margin:0 auto;padding:20px 16px 56px}
+.intro{max-width:760px;margin:6px 0 18px}
+.intro h1{font-size:clamp(26px,4.5vw,40px);font-weight:800;letter-spacing:-.02em}
+.intro p{color:var(--muted);font-size:17px;margin:10px 0 0}
+.intro strong{color:var(--ink)}
+.steps{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 20px}
+.step{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 14px 7px 8px;font-weight:700;font-size:14px}
+.step .n{width:28px;height:28px;border-radius:50%;background:var(--surface2);display:grid;place-items:center;font-size:13px;flex:none}
+.step.active{border-color:var(--brand)} .step.active .n{background:var(--brand);color:var(--brand-ink)}
+.step.done .n{background:var(--ok);color:#fff}
+.grid{display:grid;grid-template-columns:400px 1fr;gap:20px;align-items:start}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.card h2{font-size:19px;margin-bottom:4px}
+.card .sub{color:var(--muted);font-size:14px;margin:0 0 14px}
+label{display:block;font-weight:700;font-size:13.5px;margin:14px 0 6px}
+label:first-of-type{margin-top:0}
+input[type="text"],input[type="tel"],input[type="email"],textarea,select{width:100%;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);padding:10px 12px}
+textarea{resize:vertical;min-height:64px}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--brand);outline-offset:1px;border-color:var(--brand)}
+.hint{font-size:12.5px;color:var(--muted);margin-top:4px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.swatches{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.swatch{width:44px;height:44px;border-radius:12px;border:3px solid transparent;cursor:pointer;padding:0;min-height:44px}
+.swatch[aria-pressed="true"]{border-color:var(--ink);transform:scale(1.06)}
+.btn{border:0;border-radius:11px;padding:11px 18px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;justify-content:center;text-decoration:none}
+.btn-brand{background:var(--brand);color:var(--brand-ink);width:100%;font-size:16px;margin-top:18px}
+.btn-accent{background:var(--accent);color:#1a1200}
+.btn-ghost{background:var(--surface2);color:var(--ink);border:1px solid var(--line)}
+.btn-sm{padding:8px 13px;font-size:14px;min-height:40px}
+.btn:active{transform:translateY(1px)}
+.demos{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{background:var(--surface2);border:1px solid var(--line);border-radius:999px;padding:8px 13px;font-weight:700;font-size:13.5px;cursor:pointer;min-height:38px}
+.preview-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.seg{display:flex;background:var(--surface2);border-radius:10px;padding:3px;gap:3px}
+.seg button{border:0;background:transparent;border-radius:8px;padding:7px 14px;font-weight:700;cursor:pointer;color:var(--muted);min-height:38px}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.frame-wrap{background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:10px;transition:max-width .25s}
+.frame-wrap.phone{max-width:400px;margin:0 auto}
+iframe.site{width:100%;height:560px;border:1px solid var(--line);border-radius:8px;background:#fff;display:block}
+@media(max-width:600px){iframe.site{height:500px}}
+.urlbar{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:7px 12px;font-size:13.5px;color:var(--muted);margin-bottom:10px;word-break:break-all}
+.urlbar b{color:var(--ink)}
+.changebox{display:flex;gap:8px;margin-top:6px}
+.changebox input{flex:1}
+.examples{font-size:13.5px;color:var(--muted);margin-top:10px}
+.examples button{background:none;border:0;color:var(--brand);font-weight:700;cursor:pointer;padding:6px 4px;text-decoration:underline;min-height:36px}
+.log{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px}
+.log li{background:var(--surface2);border-radius:10px;padding:10px 12px;font-size:14px}
+.log li b{color:var(--brand)}
+.log .empty{background:none;color:var(--muted);padding:2px 0}
+.publish{display:none;margin-top:20px}
+.publish.show{display:block}
+.pub-url{font-family:ui-monospace,Menlo,monospace;background:var(--accent-soft);border:1px dashed var(--accent);border-radius:10px;padding:12px 14px;word-break:break-all;font-weight:700}
+.pub-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.pub-actions .btn{flex:1;min-width:160px}
+.checklist{list-style:none;margin:14px 0 0;padding:0;counter-reset:pub;display:grid;gap:10px}
+.checklist li{display:flex;gap:12px;font-size:15px}
+.checklist li::before{counter-increment:pub;content:counter(pub);width:28px;height:28px;flex:none;border-radius:50%;background:var(--brand);color:var(--brand-ink);display:grid;place-items:center;font-weight:800;font-size:14px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--bg);padding:12px 20px;border-radius:999px;font-weight:700;box-shadow:var(--shadow);transition:transform .3s,opacity .3s;z-index:50;max-width:92vw;text-align:center;opacity:0;visibility:hidden;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;visibility:visible}
+.approved-banner{display:none;background:#dcfce7;color:#14532d;border-radius:10px;padding:12px 14px;font-weight:700;margin-top:14px}
+@media (prefers-color-scheme: dark){.approved-banner{background:#14301d;color:#bbf7d0}}
+.approved-banner.show{display:block}
+footer{color:var(--muted);font-size:13.5px;margin-top:28px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="intro">
+    <h1>Describe your business. See your website in about a minute.</h1>
+    <p>Helpy builds free one-page websites for small businesses — <strong>we help you to grow online.</strong> Fill in the form, check the live preview, ask for changes in plain words, then approve it and get your site file plus your GitHub Pages link.</p>
+  </div>
+
+  <div class="steps" aria-label="Progress">
+    <span class="step active" id="step1"><span class="n">1</span> Describe</span>
+    <span class="step" id="step2"><span class="n">2</span> Preview</span>
+    <span class="step" id="step3"><span class="n">3</span> Changes</span>
+    <span class="step" id="step4"><span class="n">4</span> Approve &amp; publish</span>
+  </div>
+
+  <div class="grid">
+    <!-- LEFT: form + changes -->
+    <div>
+      <section class="card" aria-labelledby="describe-h">
+        <h2 id="describe-h">1 · Describe your business</h2>
+        <p class="sub">Only the name and a short description are essential — everything else can be added later.</p>
+
+        <div class="demos" aria-label="Try an example">
+          <button class="chip" type="button" data-demo="bakery">Try: Bakery</button>
+          <button class="chip" type="button" data-demo="tutor">Try: Tutor</button>
+          <button class="chip" type="button" data-demo="cleaner">Try: Cleaner</button>
+          <button class="chip" type="button" data-demo="plumber">Try: Plumber</button>
+        </div>
+
+        <form id="bizForm">
+          <label for="f-name">Business name *</label>
+          <input type="text" id="f-name" placeholder="e.g. Sunny Crust Bakery" autocomplete="organization">
+          <label for="f-type">What kind of business?</label>
+          <input type="text" id="f-type" placeholder="e.g. Bakery &amp; café">
+          <label for="f-tagline">Tagline <span style="font-weight:400;color:var(--muted)">(one short line)</span></label>
+          <input type="text" id="f-tagline" placeholder="e.g. Fresh bread, baked every morning">
+          <label for="f-desc">Describe your business *</label>
+          <textarea id="f-desc" placeholder="What do you do, who do you help, and what makes you different?"></textarea>
+          <label for="f-services">Services — one per line</label>
+          <textarea id="f-services" placeholder="Sourdough loaves&#10;Birthday cakes&#10;Coffee &amp; pastries"></textarea>
+          <div class="row2">
+            <div><label for="f-phone">Phone</label><input type="tel" id="f-phone" placeholder="07123 456789"></div>
+            <div><label for="f-email">Email</label><input type="email" id="f-email" placeholder="hello@example.com"></div>
+          </div>
+          <div class="row2">
+            <div><label for="f-hours">Opening hours</label><input type="text" id="f-hours" placeholder="Mon–Sat, 8am–6pm"></div>
+            <div><label for="f-area">Town / area served</label><input type="text" id="f-area" placeholder="e.g. Audlem, Cheshire"></div>
+          </div>
+          <label>Colour theme</label>
+          <div class="swatches" id="swatches" role="group" aria-label="Colour theme"></div>
+          <label for="f-layout">Style</label>
+          <select id="f-layout">
+            <option value="classic">Classic — clean and friendly</option>
+            <option value="bold">Bold — big headline, strong colour</option>
+            <option value="minimal">Minimal — lots of space, calm</option>
+          </select>
+          <button class="btn btn-brand" type="submit">✦ Build my sample website</button>
+          <p class="hint">Free, always. No payment, no account, nothing to install.</p>
+        </form>
+      </section>
+
+      <section class="card" style="margin-top:20px" aria-labelledby="change-h">
+        <h2 id="change-h">3 · Ask for changes in plain words</h2>
+        <p class="sub">Type what you want changed — the preview updates straight away. Keep going until it feels right.</p>
+        <div class="changebox">
+          <input type="text" id="changeInput" placeholder="e.g. Make it blue" aria-label="Describe a change">
+          <button class="btn btn-accent" id="applyChange" type="button">Apply</button>
+        </div>
+        <p class="examples">Try:
+          <button type="button" data-change="Make it green">“Make it green”</button>·
+          <button type="button" data-change="Make the heading bigger">“Bigger heading”</button>·
+          <button type="button" data-change="Make it dark">“Make it dark”</button>·
+          <button type="button" data-change="Remove the opening hours">“Remove hours”</button>·
+          <button type="button" data-change="Add a service: Wedding cakes">“Add a service: …”</button>·
+          <button type="button" data-change="Change the phone to 07900 111222">“Change the phone to …”</button>
+        </p>
+        <ul class="log" id="changeLog"><li class="empty">No changes yet — your sample is the starting point.</li></ul>
+      </section>
+    </div>
+
+    <!-- RIGHT: preview + publish -->
+    <div>
+      <section class="card" aria-labelledby="preview-h">
+        <div class="preview-head">
+          <div><h2 id="preview-h">2 · Your sample website</h2><p class="sub" style="margin:0">This is exactly what your visitors will see.</p></div>
+          <div class="seg" role="group" aria-label="Preview size">
+            <button type="button" id="viewDesktop" aria-pressed="true">Desktop</button>
+            <button type="button" id="viewPhone" aria-pressed="false">Phone</button>
+          </div>
+        </div>
+        <div class="urlbar">🔒 Your live address will be&nbsp;<b id="liveUrl">skie-buddy.github.io/your-business</b></div>
+        <div class="frame-wrap" id="frameWrap">
+          <iframe class="site" id="preview" title="Preview of your generated website"></iframe>
+        </div>
+        <button class="btn btn-brand" id="approveBtn" type="button" style="background:var(--ok);color:#fff">✓ This looks right — approve it</button>
+        <div class="approved-banner" id="approvedBanner">Approved 🎉 Your website is ready to publish — use the panel below.</div>
+
+        <div class="publish" id="publishPanel">
+          <h2 style="margin-top:6px">4 · Publish it on GitHub — free hosting, live in about a minute</h2>
+          <p class="sub">Download your finished site file, then follow these 4 steps. Your link goes live as soon as step 3 is done.</p>
+          <div class="pub-url" id="pubUrl">https://skie-buddy.github.io/your-business/</div>
+          <div class="pub-actions">
+            <button class="btn btn-brand" id="downloadBtn" type="button" style="margin-top:0">⬇ Download my website (index.html)</button>
+            <button class="btn btn-ghost" id="copyHtmlBtn" type="button">Copy website code</button>
+            <button class="btn btn-ghost" id="copyLinkBtn" type="button">Copy my live link</button>
+          </div>
+          <ol class="checklist">
+            <li><span>On GitHub, create a new public repository named <b id="repoName">your-business</b> — <a href="https://github.com/new" target="_blank" rel="noopener">github.com/new</a></span></li>
+            <li><span>Upload the <b>index.html</b> file you just downloaded to that repository and commit it.</span></li>
+            <li><span>In the repository, open <b>Settings → Pages</b> and set the source to <b>Deploy from a branch → main</b>, then Save.</span></li>
+            <li><span>Wait about a minute, then open your live link above and share it with your customers.</span></li>
+          </ol>
+          <p class="hint" style="margin-top:12px">Prefer Helpy to publish it for you under the Helpy account (skie-buddy), like our other client sites? Download the file and send it to <a href="mailto:helpy-sb@proton.me">helpy-sb@proton.me</a> with your business name — we’ll put it live and send you the link.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <footer>Helpy — we help you to grow online. Every website is free, given in goodwill, and yours to keep.</footer>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(function(){
+"use strict";
+var THEMES = {
+  ocean:  {label:"Ocean teal",  c:"#0e7490", dark:"#155e75", soft:"#ecfeff", sw:"#0e7490"},
+  forest: {label:"Forest green",c:"#15803d", dark:"#14532d", soft:"#f0fdf4", sw:"#15803d"},
+  sunset: {label:"Sunset orange",c:"#c2410c", dark:"#7c2d12", soft:"#fff7ed", sw:"#ea580c"},
+  navy:   {label:"Classic blue", c:"#1d4ed8", dark:"#1e3a8a", soft:"#eff6ff", sw:"#1d4ed8"},
+  rose:   {label:"Berry red",    c:"#be123c", dark:"#881337", soft:"#fff1f2", sw:"#e11d48"},
+  slate:  {label:"Charcoal",     c:"#334155", dark:"#0f172a", soft:"#f8fafc", sw:"#334155"}
+};
+var state = {
+  name:"", type:"", tagline:"", desc:"", services:[], phone:"", email:"", hours:"", area:"",
+  theme:"ocean", layout:"classic", dark:false, heroScale:1,
+  showHours:true, showServices:true, showContact:true, approved:false
+};
+var $ = function(id){ return document.getElementById(id); };
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, function(ch){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]; }); }
+function slugify(s){ var x = String(s||"").toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,""); return x || "your-business"; }
+function toast(msg){ var t=$("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(function(){ t.classList.remove("show"); },2600); }
+
+/* ---------- theme swatches ---------- */
+var swWrap = $("swatches");
+Object.keys(THEMES).forEach(function(key){
+  var b=document.createElement("button");
+  b.type="button"; b.className="swatch"; b.style.background=THEMES[key].sw;
+  b.title=THEMES[key].label; b.setAttribute("aria-label", THEMES[key].label);
+  b.setAttribute("aria-pressed", key===state.theme ? "true":"false");
+  b.addEventListener("click", function(){ state.theme=key; refreshSwatches(); render(); });
+  swWrap.appendChild(b);
+});
+function refreshSwatches(){ var bs=swWrap.querySelectorAll(".swatch"); Object.keys(THEMES).forEach(function(k,i){ bs[i].setAttribute("aria-pressed", k===state.theme?"true":"false"); }); }
+
+/* ---------- generated website HTML ---------- */
+function buildSiteHTML(){
+  var t = THEMES[state.theme] || THEMES.ocean;
+  var name = state.name || "Your Business Name";
+  var type = state.type || "Local business";
+  var tagline = state.tagline || type + (state.area ? " in " + state.area : "");
+  var desc = state.desc || "Tell visitors what you do, who you help, and why they should choose you. This text comes from your description in the builder.";
+  var bg = state.dark ? "#111827" : "#ffffff";
+  var ink = state.dark ? "#f3f4f6" : "#1f2937";
+  var soft = state.dark ? "#1f2937" : t.soft;
+  var heroPad = state.layout==="bold" ? 64 : state.layout==="minimal" ? 40 : 52;
+  var hSize = Math.round((state.layout==="bold"?46:38) * state.heroScale);
+  var servicesHtml = "";
+  if(state.showServices && state.services.length){
+    servicesHtml = '<section style="padding:36px 22px;max-width:860px;margin:0 auto"><h2 style="font-size:26px;margin:0 0 16px;color:'+ink+'">What we offer</h2><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">'
+      + state.services.map(function(s){ return '<div style="background:'+soft+';border-radius:12px;padding:18px"><div style="font-size:22px">✦</div><h3 style="margin:6px 0 0;font-size:17px;color:'+ink+'">'+esc(s)+'</h3></div>'; }).join("")
+      + '</div></section>';
+  }
+  var contactBits = [];
+  if(state.phone) contactBits.push('<p style="margin:6px 0">📞 <a href="tel:'+esc(state.phone.replace(/\s+/g,""))+'" style="color:'+t.c+';font-weight:700">'+esc(state.phone)+'</a></p>');
+  if(state.email) contactBits.push('<p style="margin:6px 0">✉️ <a href="mailto:'+esc(state.email)+'" style="color:'+t.c+';font-weight:700">'+esc(state.email)+'</a></p>');
+  if(state.showHours && state.hours) contactBits.push('<p style="margin:6px 0">🕐 '+esc(state.hours)+'</p>');
+  if(state.area) contactBits.push('<p style="margin:6px 0">📍 '+esc(state.area)+'</p>');
+  var contactHtml = state.showContact ? '<section style="background:'+soft+';padding:36px 22px"><div style="max-width:860px;margin:0 auto"><h2 style="font-size:26px;margin:0 0 10px;color:'+ink+'">Get in touch</h2>'+(contactBits.length?contactBits.join(""):'<p style="color:'+ink+'">Add your phone, email and hours in the builder and they will appear here.</p>')+'</div></section>' : "";
+  return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+esc(name)+' — '+esc(type)+'</title></head>'
+    + '<body style="margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:'+bg+';color:'+ink+';line-height:1.55">'
+    + '<header style="background:linear-gradient(135deg,'+t.c+','+t.dark+');color:#fff;padding:'+heroPad+'px 22px;text-align:center">'
+    + '<div style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;opacity:.85">'+esc(type)+'</div>'
+    + '<h1 style="font-size:'+hSize+'px;margin:10px 0 8px;line-height:1.1">'+esc(name)+'</h1>'
+    + '<p style="font-size:18px;margin:0;opacity:.95">'+esc(tagline)+'</p>'
+    + (state.phone ? '<p style="margin:20px 0 0"><a href="tel:'+esc(state.phone.replace(/\s+/g,""))+'" style="background:#fff;color:'+t.dark+';padding:12px 24px;border-radius:999px;font-weight:800;text-decoration:none;display:inline-block">Call us: '+esc(state.phone)+'</a></p>' : '')
+    + '</header>'
+    + '<section style="padding:36px 22px;max-width:860px;margin:0 auto"><h2 style="font-size:26px;margin:0 0 12px">About us</h2><p style="font-size:17px;margin:0">'+esc(desc)+'</p></section>'
+    + servicesHtml + contactHtml
+    + '<footer style="text-align:center;padding:24px;color:'+(state.dark?"#9ca3af":"#6b7280")+';font-size:13px">© '+esc(name)+' · Website made free with Helpy — we help you to grow online.</footer>'
+    + '</body></html>';
+}
+function render(){
+  $("preview").srcdoc = buildSiteHTML();
+  var slug = slugify(state.name);
+  $("liveUrl").textContent = "skie-buddy.github.io/" + slug;
+  $("pubUrl").textContent = "https://skie-buddy.github.io/" + slug + "/";
+  $("repoName").textContent = slug;
+}
+
+/* ---------- read form ---------- */
+function readForm(){
+  state.name = $("f-name").value.trim();
+  state.type = $("f-type").value.trim();
+  state.tagline = $("f-tagline").value.trim();
+  state.desc = $("f-desc").value.trim();
+  state.services = $("f-services").value.split("\n").map(function(s){return s.trim();}).filter(Boolean);
+  state.phone = $("f-phone").value.trim();
+  state.email = $("f-email").value.trim();
+  state.hours = $("f-hours").value.trim();
+  state.area = $("f-area").value.trim();
+  state.layout = $("f-layout").value;
+}
+$("bizForm").addEventListener("submit", function(e){
+  e.preventDefault(); readForm();
+  if(!state.name){ toast("Add your business name first 🙂"); $("f-name").focus(); return; }
+  render(); markStep(2);
+  toast("Your sample website is ready — check the preview 👉");
+  $("preview").scrollIntoView({behavior:"smooth", block:"center"});
+});
+["f-name","f-type","f-tagline","f-desc","f-services","f-phone","f-email","f-hours","f-area","f-layout"].forEach(function(id){
+  $(id).addEventListener("input", function(){ readForm(); render(); });
+});
+
+/* ---------- steps ---------- */
+function markStep(n){
+  for(var i=1;i<=4;i++){ var el=$("step"+i); el.classList.toggle("done", i<n); el.classList.toggle("active", i===n); }
+}
+
+/* ---------- demos ---------- */
+var DEMOS = {
+  bakery:{name:"Sunny Crust Bakery", type:"Bakery & café", tagline:"Fresh bread, baked every morning", desc:"A family-run bakery in the heart of the village. We bake sourdough, pastries and celebration cakes fresh every day using local flour and real butter — no shortcuts, just proper baking.", services:"Sourdough loaves\nBirthday & celebration cakes\nCoffee & pastries\nWeekly bread subscriptions", phone:"01270 555 214", email:"hello@sunnycrust.example", hours:"Mon–Sat, 8am–5pm", area:"Audlem, Cheshire", theme:"sunset", layout:"classic"},
+  tutor:{name:"Bright Minds Tuition", type:"Private tuition", tagline:"Friendly, expert tuition for ages 7–16", desc:"A small, friendly tuition service run by experienced teachers. We help children build confidence and catch up — or get ahead — with patient one-to-one support in maths and English, in person and online.", services:"Maths & English tuition\nExam preparation\nFlute lessons\nPiano lessons", phone:"07700 900 123", email:"hello@brightminds.example", hours:"Mon–Sat, 9am–8pm", area:"Example Town & online", theme:"forest", layout:"classic"},
+  cleaner:{name:"Sparkle & Shine Cleaning", type:"Home cleaning service", tagline:"A cleaner home, without the stress", desc:"Reliable, friendly home cleaning you can trust. Regular weekly cleans, deep cleans and end-of-tenancy cleaning — we bring everything, you just enjoy walking back into a fresh home.", services:"Weekly & fortnightly cleans\nDeep cleans\nEnd-of-tenancy cleaning\nIroning service", phone:"07700 900 431", email:"book@sparkleshine.example", hours:"Mon–Fri, 8am–6pm", area:"Crewe & Nantwich", theme:"ocean", layout:"minimal"},
+  plumber:{name:"D. Hughes Plumbing", type:"Plumber & heating", tagline:"Fast, honest plumbing — no call-out fee", desc:"Local plumber with 15 years of experience. From dripping taps to full bathroom installs, you get a clear price before we start and tidy, guaranteed work every time.", services:"Leaks & repairs\nBathroom installation\nBoiler servicing\nEmergency call-outs", phone:"07891 555 020", email:"", hours:"Mon–Sat, 7am–7pm", area:"Shrewsbury & Telford", theme:"navy", layout:"bold"}
+};
+document.querySelectorAll("[data-demo]").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    var d = DEMOS[btn.getAttribute("data-demo")]; if(!d) return;
+    $("f-name").value=d.name; $("f-type").value=d.type; $("f-tagline").value=d.tagline; $("f-desc").value=d.desc;
+    $("f-services").value=d.services; $("f-phone").value=d.phone; $("f-email").value=d.email; $("f-hours").value=d.hours;
+    $("f-area").value=d.area; $("f-layout").value=d.layout; state.theme=d.theme; refreshSwatches();
+    readForm(); render(); markStep(2); toast("Example loaded — this is a sample website ✨");
+  });
+});
+
+/* ---------- plain-words changes ---------- */
+var logEl = $("changeLog");
+function logChange(text, result){
+  var empty = logEl.querySelector(".empty"); if(empty) empty.remove();
+  var li = document.createElement("li");
+  li.innerHTML = "<b>You:</b> “"+esc(text)+"”<br><b>Done:</b> "+esc(result);
+  logEl.prepend(li);
+}
+var COLOR_WORDS = {blue:"navy", green:"forest", teal:"ocean", turquoise:"ocean", orange:"sunset", red:"rose", pink:"rose", berry:"rose", black:"slate", grey:"slate", gray:"slate", charcoal:"slate"};
+function applyChange(raw){
+  var text = (raw||"").trim(); if(!text){ toast("Type a change first — e.g. “Make it blue”"); return; }
+  var low = text.toLowerCase(); var result = null;
+  var colorHit = null;
+  Object.keys(COLOR_WORDS).forEach(function(w){ if(low.indexOf(w)>-1) colorHit = COLOR_WORDS[w]; });
+  if(low.indexOf("dark")>-1 && !colorHit){ state.dark = true; result = "Switched your website to a dark look."; }
+  else if(low.indexOf("light")>-1){ state.dark = false; result = "Switched your website back to a light look."; }
+  else if(colorHit){ state.theme = colorHit; refreshSwatches(); result = "Changed the colour theme to " + THEMES[colorHit].label + "."; }
+  else if(low.indexOf("bigger")>-1 || low.indexOf("larger")>-1){ state.heroScale = Math.min(1.5, state.heroScale + 0.15); result = "Made the main heading bigger."; }
+  else if(low.indexOf("smaller")>-1){ state.heroScale = Math.max(0.7, state.heroScale - 0.15); result = "Made the main heading smaller."; }
+  else if(low.indexOf("remove")>-1 && low.indexOf("hour")>-1){ state.showHours=false; result="Removed the opening hours from your website."; }
+  else if((low.indexOf("add")>-1||low.indexOf("show")>-1) && low.indexOf("hour")>-1){ state.showHours=true; if(!state.hours){ state.hours="Mon–Sat, 9am–5pm"; $("f-hours").value=state.hours; } result="Opening hours are now showing."; }
+  else if(low.indexOf("remove")>-1 && low.indexOf("service")>-1){ state.services.pop(); $("f-services").value=state.services.join("\n"); result="Removed the last service from the list."; }
+  else if(low.indexOf("remove")>-1 && low.indexOf("contact")>-1){ state.showContact=false; result="Removed the contact section."; }
+  else if(low.indexOf("add")>-1 && low.indexOf("contact")>-1){ state.showContact=true; result="The contact section is back."; }
+  else if(low.indexOf("service")>-1 && (low.indexOf("add")>-1 || low.indexOf(":")>-1)){
+    var svc = text.split(/[:–—-]/).slice(1).join("-").trim() || text.replace(/.*add (a )?service:?/i,"").trim();
+    if(svc){ state.services.push(svc); $("f-services").value=state.services.join("\n"); state.showServices=true; result="Added “"+svc+"” to your services."; }
+  }
+  else if(low.indexOf("phone")>-1){
+    var num = text.replace(/.*?phone( number)?( to| is|:)?/i,"").trim();
+    if(num){ state.phone=num; $("f-phone").value=num; result="Phone number changed to "+num+"."; }
+  }
+  else if(low.indexOf("name")>-1 && low.indexOf("change")>-1){
+    var nm = text.replace(/.*?name( to| is|:)?/i,"").trim();
+    if(nm){ state.name=nm; $("f-name").value=nm; result="Business name changed to “"+nm+"”."; }
+  }
+  else if(low.indexOf("bold")>-1){ state.layout="bold"; $("f-layout").value="bold"; result="Switched to the Bold style — bigger headline, stronger colour."; }
+  else if(low.indexOf("minimal")>-1 || low.indexOf("simple")>-1){ state.layout="minimal"; $("f-layout").value="minimal"; result="Switched to the calm Minimal style."; }
+  else if(low.indexOf("classic")>-1){ state.layout="classic"; $("f-layout").value="classic"; result="Switched back to the Classic style."; }
+  if(!result){
+    result = "Noted and added to your change list — a Helpy helper will apply this wording exactly when your site is published. Try a colour, heading size, or add/remove a section to see instant changes.";
+    state.desc = state.desc ? state.desc : "";
+  }
+  state.approved = false; $("approvedBanner").classList.remove("show"); $("publishPanel").classList.remove("show");
+  render(); logChange(text, result); markStep(3); toast("Change applied — check the preview 👉");
+  $("changeInput").value="";
+}
+$("applyChange").addEventListener("click", function(){ applyChange($("changeInput").value); });
+$("changeInput").addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); applyChange(this.value); } });
+document.querySelectorAll("[data-change]").forEach(function(b){ b.addEventListener("click", function(){ applyChange(b.getAttribute("data-change")); }); });
+
+/* ---------- preview size toggle ---------- */
+$("viewDesktop").addEventListener("click", function(){ $("frameWrap").classList.remove("phone"); this.setAttribute("aria-pressed","true"); $("viewPhone").setAttribute("aria-pressed","false"); });
+$("viewPhone").addEventListener("click", function(){ $("frameWrap").classList.add("phone"); this.setAttribute("aria-pressed","true"); $("viewDesktop").setAttribute("aria-pressed","false"); });
+
+/* ---------- approve & publish ---------- */
+$("approveBtn").addEventListener("click", function(){
+  readForm();
+  if(!state.name){ toast("Add your business name and build the sample first 🙂"); return; }
+  state.approved = true; render();
+  $("approvedBanner").classList.add("show"); $("publishPanel").classList.add("show"); markStep(4);
+  toast("Approved 🎉 Now download your site below");
+  $("publishPanel").scrollIntoView({behavior:"smooth", block:"start"});
+});
+$("downloadBtn").addEventListener("click", function(){
+  var blob = new Blob([buildSiteHTML()], {type:"text/html"});
+  var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "index.html";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+  toast("Downloaded — now follow the 4 publish steps ⬆");
+});
+function copyText(txt, msg){
+  function done(){ toast(msg); }
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(done, function(){ fallback(); }); } else fallback();
+  function fallback(){ var ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta); ta.select(); try{ document.execCommand("copy"); done(); }catch(e){ toast("Copy didn't work — long-press to copy manually"); } ta.remove(); }
+}
+$("copyHtmlBtn").addEventListener("click", function(){ copyText(buildSiteHTML(), "Website code copied — paste it into an index.html file on GitHub"); });
+$("copyLinkBtn").addEventListener("click", function(){ copyText($("pubUrl").textContent, "Your live link copied 🔗"); });
+
+render();
+})();
+</script>
+</body>
+</html>
